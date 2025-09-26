@@ -205,6 +205,9 @@ class RageJump {
         // Track if "don't fall now" message has been shown this round
         this.shownDontFallMessage = false;
         
+        // Track last highest position for instant death on big falls
+        this.lastHighPosition = 0;
+        
         // Start the game loop
         this.gameLoop();
         
@@ -443,6 +446,7 @@ class RageJump {
         const currentHeight = Math.max(0, Math.floor((430 - this.player.y) / 10));
         if (currentHeight > this.height) {
             this.height = currentHeight;
+            this.lastHighPosition = currentHeight; // Update last high position
             
             // Save new best height (and rub it in their face when they fall)
             if (this.height > this.bestHeight) {
@@ -455,6 +459,11 @@ class RageJump {
                     this.shownDontFallMessage = true;
                 }
             }
+        }
+        // Instant death if you fall more than 28m below your last high position
+        if (this.lastHighPosition - currentHeight > 28) {
+            this.playerDied();
+            return;
         }
         
         // Check if player fell to their doom
@@ -713,16 +722,16 @@ class RageJump {
         `;
         
         document.body.appendChild(trollImg);
-        // Play snoop.mp3 at 1.65x speed when trollface shows
+        // Play snoop.mp3 at 1.3x speed when trollface shows (simultaneous)
         try {
             const snoopAudio = new Audio('assets/snoop.mp3');
             snoopAudio.volume = 0.8;
-            snoopAudio.playbackRate = 1.65;
+            snoopAudio.playbackRate = 1.3;
             snoopAudio.play().catch(() => {});
         } catch (e) {}
         setTimeout(() => {
             document.body.removeChild(trollImg);
-        }, 560);
+        }, 800);
     }
     
     render() {
