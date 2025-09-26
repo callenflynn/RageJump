@@ -713,7 +713,13 @@ class RageJump {
         `;
         
         document.body.appendChild(trollImg);
-        
+        // Play snoop.mp3 at 1.65x speed when trollface shows
+        try {
+            const snoopAudio = new Audio('assets/snoop.mp3');
+            snoopAudio.volume = 0.8;
+            snoopAudio.playbackRate = 1.65;
+            snoopAudio.play().catch(() => {});
+        } catch (e) {}
         setTimeout(() => {
             document.body.removeChild(trollImg);
         }, 560);
@@ -998,7 +1004,7 @@ class RageJump {
     playRandomLaughSound() {
         // List of actual laugh sound files in assets/laugh/ (laugh1.wav through laugh6.wav)
         const laughSounds = [
-            'laugh1.wav', 'laugh2.wav', 'laugh3.wav', 'laugh4.wav', 'laugh5.wav', 'laugh6.wav'
+            'laugh1.wav', 'laugh2.wav', 'laugh3.wav', 'laugh4.wav', 'laugh5.wav', 'laugh6.wav', 'laugh7.mp3'
         ];
         
         // Pick a random laugh sound
