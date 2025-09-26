@@ -53,6 +53,8 @@ class RageJump {
         this.mockingMessages = [
             "Seriously? Already?",
             "You alone are the reason shampoo has instructions",
+            "Sped",
+            "You need help",
             "You slow?",
             "Keep practicing, champ 🥇",
             "This aint it",
@@ -82,7 +84,6 @@ class RageJump {
             "More projects at github.com/Callenflynn",
             "Why even try?",
             "Did you do that on purpose?",
-            "Son, we have to talk... Mom and I are getting a divorce",
             "BOOOOOZOOOOOOOOOOO",
             "You bring shame to your family",
             "I would explain what you did wrong, but I don't speak Dumbass",
