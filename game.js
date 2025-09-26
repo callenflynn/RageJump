@@ -52,6 +52,8 @@ class RageJump {
             "You slow?",
             "Keep practicing, champ 🥇",
             "This aint it",
+            "I hate you",
+            "I have a personal issue with you, specifically",
             "You genuinely suck.",
             "Baby’s first videogame? 🍼",
             "Cute attempt",
