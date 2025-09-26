@@ -192,6 +192,13 @@ class RageJump {
                 description: 'Bozo',
                 icon: 'trollflip.jpg',
                 unlocked: this.loadAchievement('getTrolled')
+            },
+            lol: {
+                id: 'lol',
+                name: 'LOL',
+                description: 'Get laughed at',
+                icon: '😂',
+                unlocked: this.loadAchievement('lol')
             }
         };
         
@@ -615,7 +622,8 @@ class RageJump {
         
         this.playSound('deathSound');
         
-        if (Math.random() < 0.12) {
+        // 13% chance to play random laugh sound for extra psychological damage
+        if (Math.random() < 0.13) {
             this.playRandomLaughSound();
         }
         
@@ -997,10 +1005,14 @@ class RageJump {
         // Pick a random laugh sound
         const randomLaugh = laughSounds[Math.floor(Math.random() * laughSounds.length)];
         
+        // Unlock LOL achievement
+        this.unlockAchievement('lol');
+        
         try {
             // Create audio element dynamically
             const audio = new Audio(`assets/laugh/${randomLaugh}`);
             audio.volume = 0.7; // Slightly quieter than death sound
+            audio.playbackRate = 1.25; // Play at 1.25x speed for extra annoyance
             audio.play().catch(() => {
                 // Ignore audio play errors (browser restrictions)
             });
