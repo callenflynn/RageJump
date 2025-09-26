@@ -698,25 +698,7 @@ class RageJump {
     }
     
     showTrollImage() {
-        // Create troll image element
-        const trollImg = document.createElement('img');
-        trollImg.src = 'assets/trollflip.jpg';
-        trollImg.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: auto;
-            z-index: 9999;
-            border: 5px solid #ff6b6b;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
-            animation: trollPop 0.46s ease-out;
-        `;
-        
-        document.body.appendChild(trollImg);
-        // Play snoop.mp3 at 1.3x speed when trollface shows (simultaneous)
+        // Play snoop.mp3 at 1.3x speed .4 seconds before trollface
         try {
             const snoopAudio = new Audio('assets/snoop.mp3');
             snoopAudio.volume = 0.8;
@@ -724,8 +706,27 @@ class RageJump {
             snoopAudio.play().catch(() => {});
         } catch (e) {}
         setTimeout(() => {
-            document.body.removeChild(trollImg);
-        }, 800);
+            // Create and show trollface image after 0.4s
+            const trollImg = document.createElement('img');
+            trollImg.src = 'assets/trollflip.jpg';
+            trollImg.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 300px;
+                height: auto;
+                z-index: 9999;
+                border: 5px solid #ff6b6b;
+                border-radius: 10px;
+                box-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
+                animation: trollPop 0.46s ease-out;
+            `;
+            document.body.appendChild(trollImg);
+            setTimeout(() => {
+                document.body.removeChild(trollImg);
+            }, 800);
+        }, 400);
     }
     
     render() {
