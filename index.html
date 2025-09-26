@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RageJump - The Most Infuriating Game Ever</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="gameWrapper">
+        <div id="gameContainer">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <div id="ui">
+                <div id="heightDisplay">Height: 0m</div>
+                <div id="deathCounter">Deaths: 0</div>
+                <div id="bestHeightDisplay">Best: 0m</div>
+                <div id="totalDeathsDisplay">Total Deaths: 0</div>
+                <div id="playTimeDisplay">Time Wasted: 0s</div>
+                <div id="mockingText"></div>
+            </div>
+        </div>
+        
+        <!-- Achievements Sidebar -->
+        <div id="achievementsSidebar">
+            <div class="sidebar-header">
+                <h3>🏆 Achievements</h3>
+            </div>
+            <div class="sidebar-content">
+                <div id="achievementsList"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    <audio id="jumpSound" preload="auto">
+        <source src="assets/jump.wav" type="audio/wav">
+    </audio>
+    <audio id="deathSound" preload="auto">
+        <source src="assets/death.wav" type="audio/wav">
+    </audio>
+    <audio id="mockSound" preload="auto">
+        <source src="assets/mock.wav" type="audio/wav">
+    </audio>
+    
+    <script src="game.js"></script>
+</body>
+</html>
