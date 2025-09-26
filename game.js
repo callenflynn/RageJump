@@ -43,8 +43,28 @@ class RageJump {
         // Rage mechanics
         this.mockingMessages = [
             "Seriously? Already?",
+            "You alone are the reason shampoo has instructions",
+            "You slow?",
+            "Keep practicing, champ 🥇",
+            "This aint it",
+            "Baby’s first videogame? 🍼",
+            "Cute attempt",
+            "Blink if you're slow!",
+            "nice one",
+            "Not even close.",
+            "Keyboard unplug?",
+            "No Hoes.",
+            "Lmao.",
+            "You are the reason tinder added swiping left",
+            "My pet rock gets more game than you",
+            "Smooth brain",
+            "I am currently failing one of my classes but im not going to say which one.",
+            "Your playstyle should be a warcrime",
+            "You miss 100% of the backshots you don't make - Peter Griffin - Michael Angelo - Bruce Wayne - Chuck Norris - LeBron James - Jamal - That one dude",
             "My grandmother could do better",
+            "Failure, you are. Yes. - Yoda",
             "Maybe gaming isn't for you",
+            "Ragebait",
             "Have you tried turning it off forever?",
             "That was... impressive. In the worst way.",
             "I've seen potatoes with better reflexes",
@@ -54,10 +74,15 @@ class RageJump {
             "Even the tutorial was too hard, huh?",
             "Maybe try easy mode... oh wait, there isn't one",
             "Fatass.",
+            "PEAK ragebait",
             "Is getting good on the agenda?",
             "I am genuinly impressed... at how ASS you are.",
             "get a job bro  🥀 ",
             "💔",
+            "This has gotta be on purpose bro",
+            "DAMNNNNNNNNNNNNNNNNNNNNN",
+            "Are we still on for sushi later?",
+            "PEAK ragebait",
             "Just... Don't...",
             "🎶Tell me why ain't nothin but a miiiistakeee🎶🎶🎶",
             "you can't do it.",
@@ -73,10 +98,19 @@ class RageJump {
             "You got games on yo phone?",
             "67",
             "1738",
+            "Do I need to make a tutorial for a one button game?",
+            "You had one job...",
+            "Seriously?",
+            "Dogshi",
+            "No shot 😭😭😭",
+            "ts",
+            "Bro 💔💔",
+            ":(",
             "...",
             "bad",
             "Good Boyyyyy",
             "...",
+            "I like to see the world burn",
             "Nike: Don't Do it",
             " Dih 🥀 ",
             "I'm not angry, just disappointed",
@@ -128,8 +162,18 @@ class RageJump {
                 description: '0.5% chance of seeing this message!',
                 icon: '✨',
                 unlocked: this.loadAchievement('goldenMessage')
+            },
+            getTrolled: {
+                id: 'getTrolled',
+                name: 'Get Trolled',
+                description: 'Bozo',
+                icon: 'trollflip.jpg',
+                unlocked: this.loadAchievement('getTrolled')
             }
         };
+        
+        // Track if "don't fall now" message has been shown this round
+        this.shownDontFallMessage = false;
         
         // Start the game loop
         this.gameLoop();
@@ -195,6 +239,7 @@ class RageJump {
         this.camera.y = 0;
         this.height = 0;
         this.consecutiveFakePlatforms = 0; // Reset fake platform counter
+        this.shownDontFallMessage = false; // Reset "don't fall now" message flag for new round
         
         this.updateUI();
     }
@@ -367,7 +412,12 @@ class RageJump {
             if (this.height > this.bestHeight) {
                 this.bestHeight = this.height;
                 this.saveBestHeight();
-                this.showMockingMessage(`NEW RECORD: ${this.height}m! Don't fall now...`);
+                
+                // Only show "don't fall now" message once per round
+                if (!this.shownDontFallMessage) {
+                    this.showMockingMessage(`NEW RECORD: ${this.height}m! Don't fall now...`);
+                    this.shownDontFallMessage = true;
+                }
             }
         }
         
@@ -419,18 +469,15 @@ class RageJump {
                         setTimeout(() => {
                             if (platform.active) {
                                 platform.active = false;
-                                // Set respawn timer (1-4 seconds = 60-240 frames at 60fps)
                                 platform.respawnDelay = 60 + Math.random() * 180;
                                 platform.respawnTimer = platform.respawnDelay;
-                                this.showMockingMessage("Surprise! It was fake!");
+                                this.showMockingMessage("Sike! It was fake!");
                             }
                         }, 200);
                     } else if (platform.type === 'crumbling') {
-                        // Crumbling platform - starts falling apart
                         platform.crumbleTime--;
                         if (platform.crumbleTime <= 0) {
                             platform.active = false;
-                            // Set respawn timer for crumbled platform (1-4 seconds)
                             platform.respawnDelay = 60 + Math.random() * 180;
                             platform.respawnTimer = platform.respawnDelay;
                             this.createParticles(platform.x + platform.width/2, platform.y, '#A0522D');
@@ -448,7 +495,6 @@ class RageJump {
             }
         }
         
-        // Move player with moving platform
         if (standingOnPlatform && standingOnPlatform.type === 'moving') {
             this.player.x += standingOnPlatform.direction * standingOnPlatform.speed;
         }
@@ -456,17 +502,14 @@ class RageJump {
     
     updatePlatforms() {
         for (let platform of this.platforms) {
-            // Handle moving platforms
             if (platform.type === 'moving' && platform.active) {
                 platform.x += platform.direction * platform.speed;
                 
-                // Bounce off screen edges
                 if (platform.x <= 0 || platform.x + platform.width >= this.canvas.width) {
                     platform.direction *= -1;
                 }
             }
             
-            // Handle flashing fake platforms
             if (platform.isFlashing && platform.flashTimer > 0) {
                 platform.flashTimer--;
                 if (platform.flashTimer <= 0) {
@@ -474,23 +517,19 @@ class RageJump {
                 }
             }
             
-            // Handle respawning platforms
             if (!platform.active && platform.respawnTimer > 0) {
                 platform.respawnTimer--;
                 
-                // Respawn the platform
                 if (platform.respawnTimer <= 0) {
                     platform.active = true;
                     platform.isFlashing = false; // Reset flash state
                     platform.flashTimer = 0;
                     
-                    // Reset platform-specific properties
                     if (platform.type === 'crumbling') {
                         platform.crumbleTime = 150; // Reset crumble time
                     }
                     
-                    // Show a subtle indication that it's back (optional evil twist)
-                    if (Math.random() < 0.3) { // 30% chance to mock them
+                    if (Math.random() < 0.2) { // 20% chance to mock them
                         this.showMockingMessage("Look! A platform appeared... for now.");
                     }
                 }
@@ -549,16 +588,17 @@ class RageJump {
         // Play death sound and show mocking message
         this.playSound('deathSound');
         
-        // 20% chance to show troll image
-        if (Math.random() < 0.2) {
+        // 15% chance to show troll image, otherwise show insult message
+        if (Math.random() < 0.15) {
             this.showTrollImage();
-        }
-        
-        // Choose extra evil message if they were doing well
-        if (wasCloseToRecord && this.height > 50) {
-            this.showMockingMessage(`Ouch! Fell from ${this.height}m when your best is ${this.bestHeight}m. So close!`);
+            this.unlockAchievement('getTrolled'); // Unlock achievement when trolled
         } else {
-            this.showRandomMockingMessage();
+            // Choose extra evil message if they were doing well
+            if (wasCloseToRecord && this.height > 50) {
+                this.showMockingMessage(`Ouch! Fell from ${this.height}m when your best is ${this.bestHeight}m. So close!`);
+            } else {
+                this.showRandomMockingMessage();
+            }
         }
         
         // Save play time
@@ -632,23 +672,20 @@ class RageJump {
             border: 5px solid #ff6b6b;
             border-radius: 10px;
             box-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
-            animation: trollPop 0.66s ease-out;
+            animation: trollPop 0.46s ease-out;
         `;
         
         document.body.appendChild(trollImg);
         
-        // Remove after 0.66 seconds
         setTimeout(() => {
             document.body.removeChild(trollImg);
-        }, 660);
+        }, 560);
     }
     
     render() {
-        // Clear canvas
         this.ctx.fillStyle = 'linear-gradient(180deg, #87CEEB 0%, #4682B4 50%, #2F4F4F 100%)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Simple background gradient
         const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
         gradient.addColorStop(0, '#87CEEB');
         gradient.addColorStop(0.5, '#4682B4');
@@ -1062,8 +1099,20 @@ class RageJump {
             const achievementDiv = document.createElement('div');
             achievementDiv.className = `achievement ${achievement.unlocked ? 'unlocked' : ''}`;
             
+            // Handle icon display - if it's an image file, create img element, otherwise use emoji/text
+            let iconContent;
+            if (achievement.unlocked) {
+                if (achievement.icon.includes('.jpg') || achievement.icon.includes('.png') || achievement.icon.includes('.gif')) {
+                    iconContent = `<img src="assets/${achievement.icon}" alt="${achievement.name}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 5px;">`;
+                } else {
+                    iconContent = achievement.icon;
+                }
+            } else {
+                iconContent = '🔒';
+            }
+            
             achievementDiv.innerHTML = `
-                <div class="achievement-icon">${achievement.unlocked ? achievement.icon : '🔒'}</div>
+                <div class="achievement-icon">${iconContent}</div>
                 <div class="achievement-info">
                     <div class="achievement-name">${achievement.name}</div>
                     <div class="achievement-description">${achievement.description}</div>
