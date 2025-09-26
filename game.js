@@ -1089,136 +1089,127 @@ class RageJump {
     formatPlayTime() {
         const totalSeconds = Math.floor((this.totalPlayTime + (Date.now() - this.sessionStartTime)) / 1000);
         const hours = Math.floor(totalSeconds / 3600);
-        const seconds = totalSeconds % 60;
         const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;if (hours > 0) {
-        urs}h ${minutes}m ${seconds}s`;
-        } else if (minutes > 0) {
+        const seconds = totalSeconds % 60;
         if (hours > 0) {
             return `${hours}h ${minutes}m ${seconds}s`;
         } else if (minutes > 0) {
             return `${minutes}m ${seconds}s`;
         } else {
             return `${seconds}s`;
-        }/ Reset all saved progress (for the truly desperate)
-    }resetAllProgress() {
-    your progress? This cannot be undone!")) {
-    // Reset all saved progress (for the truly desperate).removeItem('ragejump_best_height');
+        }
+    }
+
     resetAllProgress() {
-        if (confirm("Are you sure you want to delete ALL your progress? This cannot be undone!")) {');
+        if (confirm("Are you sure you want to delete ALL your progress? This cannot be undone!")) {
             localStorage.removeItem('ragejump_best_height');
             localStorage.removeItem('ragejump_total_deaths');
-            localStorage.removeItem('ragejump_total_playtime'); 0;
-            this.bestHeight = 0; = Date.now();
-            this.totalDeaths = 0;);
+            localStorage.removeItem('ragejump_total_playtime');
+            this.bestHeight = 0;
+            this.totalDeaths = 0;
             this.totalPlayTime = 0;
-            this.sessionStartTime = Date.now();Fresh start! Let's see you fail again.");
+            this.sessionStartTime = Date.now();
             this.displaySavedStats();
             this.updateUI();
             this.showMockingMessage("Fresh start! Let's see you fail again.");
-        }isplaySavedStats() {
-    }    // Stats are now shown in the game UI, no startup message needed
-    ious stats - Best: ${this.bestHeight}m, Deaths: ${this.totalDeaths}, Time: ${this.formatPlayTime()}`);
+        }
+    }
+
     displaySavedStats() {
         // Stats are now shown in the game UI, no startup message needed
-        console.log(`Previous stats - Best: ${this.bestHeight}m, Deaths: ${this.totalDeaths}, Time: ${this.formatPlayTime()}`);/ Achievement system functions
-    }loadAchievement(achievementId) {
-    (`ragejump_achievement_${achievementId}`) === 'true';
+        console.log(`Previous stats - Best: ${this.bestHeight}m, Deaths: ${this.totalDeaths}, Time: ${this.formatPlayTime()}`);
+    }
+
     // Achievement system functions
     loadAchievement(achievementId) {
-        return localStorage.getItem(`ragejump_achievement_${achievementId}`) === 'true';aveAchievement(achievementId) {
-    }    localStorage.setItem(`ragejump_achievement_${achievementId}`, 'true');
-    
+        return localStorage.getItem(`ragejump_achievement_${achievementId}`) === 'true';
+    }
+
     saveAchievement(achievementId) {
-        localStorage.setItem(`ragejump_achievement_${achievementId}`, 'true');nlockAchievement(achievementId) {
-    }    if (!this.achievements[achievementId].unlocked) {
-    entId].unlocked = true;
+        localStorage.setItem(`ragejump_achievement_${achievementId}`, 'true');
+    }
+
     unlockAchievement(achievementId) {
-        if (!this.achievements[achievementId].unlocked) {s[achievementId]);
-            this.achievements[achievementId].unlocked = true; Update the sidebar display
+        if (!this.achievements[achievementId].unlocked) {
+            this.achievements[achievementId].unlocked = true;
             this.saveAchievement(achievementId);
             this.showAchievementNotification(this.achievements[achievementId]);
             this.updateAchievementsSidebar(); // Update the sidebar display
-        }howAchievementNotification(achievement) {
-    }    // Create achievement notification
-    ement('div');
+        }
+    }
+
     showAchievementNotification(achievement) {
         // Create achievement notification
         const notification = document.createElement('div');
         notification.style.cssText = `
-            position: fixed; translateX(-50%);
-            top: 20px;: linear-gradient(90deg, #FFD700, #FFA500);
+            position: fixed;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(90deg, #FFD700, #FFA500);: 10px;
-            color: black;er New', monospace;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            color: black;
             padding: 15px 25px;
             border-radius: 10px;
             font-family: 'Courier New', monospace;
-            font-weight: bold;20px rgba(255, 215, 0, 0.8);
-            font-size: 16px;lid #FFD700;
+            font-weight: bold;
+            font-size: 16px;
             z-index: 1001;
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-            border: 2px solid #FFD700;t Unlocked: ${achievement.name}`;
+            border: 2px solid #FFD700;
             animation: slideDown 0.5s ease-out;
         `;
         notification.innerHTML = `🏆 Achievement Unlocked: ${achievement.name}`;
-        
-        document.body.appendChild(notification);setTimeout(() => {
-        imation = 'slideUp 0.5s ease-in forwards';
-        // Remove after 3 seconds=> document.body.removeChild(notification), 500);
+        document.body.appendChild(notification);
+        // Remove after 3 seconds
         setTimeout(() => {
             notification.style.animation = 'slideUp 0.5s ease-in forwards';
             setTimeout(() => document.body.removeChild(notification), 500);
-        }, 3000);howAchievements() {
-    }    // This function is no longer needed with the permanent sidebar
-    p it for compatibility
+        }, 3000);
+    }
+
     showAchievements() {
         // This function is no longer needed with the permanent sidebar
         // but we'll keep it for compatibility
-        this.updateAchievementsSidebar();ideAchievements() {
-    }    // This function is no longer needed with the permanent sidebar
-    p it for compatibility
+        this.updateAchievementsSidebar();
+    }
+
     hideAchievements() {
         // This function is no longer needed with the permanent sidebar
-        // but we'll keep it for compatibilitypdateAchievementsSidebar() {
-    }    const achievementsList = document.getElementById('achievementsList');
-    
+        // but we'll keep it for compatibility
+    }
+
     updateAchievementsSidebar() {
-        const achievementsList = document.getElementById('achievementsList');achievementsList.innerHTML = '';
-        
+        const achievementsList = document.getElementById('achievementsList');
         // Clear existing content
-        achievementsList.innerHTML = '';Object.values(this.achievements).forEach(achievement => {
-        v = document.createElement('div');
-        // Add each achievement.unlocked ? 'unlocked' : ''}`;
+        achievementsList.innerHTML = '';
+        // Add each achievement
         Object.values(this.achievements).forEach(achievement => {
-            const achievementDiv = document.createElement('div');moji/text
-            achievementDiv.className = `achievement ${achievement.unlocked ? 'unlocked' : ''}`;let iconContent;
-            
-            // Handle icon display - if it's an image file, create img element, otherwise use emoji/textent.icon.includes('.jpg') || achievement.icon.includes('.png') || achievement.icon.includes('.gif')) {
-            let iconContent; src="assets/${achievement.icon}" alt="${achievement.name}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 5px;">`;
+            const achievementDiv = document.createElement('div');
+            achievementDiv.className = `achievement ${achievement.unlocked ? 'unlocked' : ''}`;
+            // Handle icon display - if it's an image file, create img element, otherwise use emoji/text
+            let iconContent;
             if (achievement.unlocked) {
                 if (achievement.icon.includes('.jpg') || achievement.icon.includes('.png') || achievement.icon.includes('.gif')) {
                     iconContent = `<img src="assets/${achievement.icon}" alt="${achievement.name}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 5px;">`;
                 } else {
-                    iconContent = achievement.icon;conContent = '🔒';
+                    iconContent = achievement.icon;
                 }
             } else {
-                iconContent = '🔒';chievementDiv.innerHTML = `
-            }    <div class="achievement-icon">${iconContent}</div>
-            info">
-            achievementDiv.innerHTML = `me}</div>
-                <div class="achievement-icon">${iconContent}</div>scription">${achievement.description}</div>
+                iconContent = '🔒';
+            }
+            achievementDiv.innerHTML = `
+                <div class="achievement-icon">${iconContent}</div>
                 <div class="achievement-info">
                     <div class="achievement-name">${achievement.name}</div>
                     <div class="achievement-description">${achievement.description}</div>
-                </div>hievementsList.appendChild(achievementDiv);
+                </div>
             `;
-            
             achievementsList.appendChild(achievementDiv);
         });
-    }/ Start the game when the page loads
-}document.addEventListener('DOMContentLoaded', () => {
+    }
+}
 
-// Start the game when the page loadsdocument.addEventListener('DOMContentLoaded', () => {    new RageJump();
+// Start the game when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new RageJump();
 });
