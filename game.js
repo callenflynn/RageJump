@@ -154,7 +154,7 @@ class RageJump {
         
         this.momentumMeter = {
             value: 0, 
-            speed: 0.03, 
+            speed: 0.02, 
             direction: 1, // 1 or -1, direction of oscillation
             paused: false, // Whether the meter is paused
             pauseTimer: 0, // Time remaining in pause
