@@ -996,7 +996,7 @@ class RageJump {
     }
     
     playRandomLaughSound() {
-        // List of laugh sound files in assets/laugh/
+        // List of potential laugh sound files in assets/laugh/
         const laughSounds = [
             'laugh1.wav', 'laugh2.wav', 'laugh3.wav', 'laugh4.wav', 'laugh5.wav',
             'laugh6.wav', 'laugh7.wav', 'laugh8.wav', 'laugh9.wav', 'laugh10.wav'
@@ -1013,11 +1013,27 @@ class RageJump {
             const audio = new Audio(`assets/laugh/${randomLaugh}`);
             audio.volume = 0.7; // Slightly quieter than death sound
             audio.playbackRate = 1.25; // Play at 1.25x speed for extra annoyance
-            audio.play().catch(() => {
-                // Ignore audio play errors (browser restrictions)
+            
+            // Add error handling to see if file exists
+            audio.addEventListener('error', () => {
+                console.log(`Could not load laugh sound: ${randomLaugh}`);
+                // Fallback: try to play a simple laugh sound or mock sound
+                this.playSound('mockSound'); // Use existing mock sound as fallback
+            });
+            
+            audio.addEventListener('loadeddata', () => {
+                console.log(`Successfully loaded laugh sound: ${randomLaugh}`);
+            });
+            
+            audio.play().catch((error) => {
+                console.log('Audio play failed:', error);
+                // Fallback to existing mock sound
+                this.playSound('mockSound');
             });
         } catch (e) {
-            // Ignore audio errors
+            console.log('Audio creation failed:', e);
+            // Fallback to existing mock sound
+            this.playSound('mockSound');
         }
     }
     
