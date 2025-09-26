@@ -996,10 +996,9 @@ class RageJump {
     }
     
     playRandomLaughSound() {
-        // List of potential laugh sound files in assets/laugh/
+        // List of actual laugh sound files in assets/laugh/ (laugh1.wav through laugh6.wav)
         const laughSounds = [
-            'laugh1.wav', 'laugh2.wav', 'laugh3.wav', 'laugh4.wav', 'laugh5.wav',
-            'laugh6.wav', 'laugh7.wav', 'laugh8.wav', 'laugh9.wav', 'laugh10.wav'
+            'laugh1.wav', 'laugh2.wav', 'laugh3.wav', 'laugh4.wav', 'laugh5.wav', 'laugh6.wav'
         ];
         
         // Pick a random laugh sound
