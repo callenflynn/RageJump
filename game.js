@@ -66,6 +66,8 @@ class RageJump {
             "Maybe gaming isn't for you",
             "Ragebait",
             "L",
+            "More projects at Callenflynn.vercel.app",
+            "More projects at github.com/Callenflynn",
             "Why even try?",
             "Did you do that on purpose?",
             "Son, we have to talk... Mom and I are getting a divorce",
