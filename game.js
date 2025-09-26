@@ -45,6 +45,10 @@ class RageJump {
         this.frameInterval = 1000 / this.targetFPS;
         this.lastFrameTime = 0;
         
+        // Secret evil nudge mechanic (every 20 seconds)
+        this.nudgeTimer = 0;
+        this.nudgeInterval = 20 * 60; // 20 seconds at 60fps
+        
         // Rage mechanics
         this.mockingMessages = [
             "Seriously? Already?",
@@ -259,6 +263,7 @@ class RageJump {
         this.height = 0;
         this.consecutiveFakePlatforms = 0; // Reset fake platform counter
         this.shownDontFallMessage = false; // Reset "don't fall now" message flag for new round
+        this.nudgeTimer = 0; // Reset evil nudge timer for new attempt
         
         this.updateUI();
     }
@@ -404,14 +409,19 @@ class RageJump {
         this.player.x += this.player.velocityX;
         this.player.y += this.player.velocityY;
         
-        // Keep player on screen horizontally (with some evil wall bouncing)
-        if (this.player.x < 0) {
-            this.player.x = 0;
-            this.player.velocityX = Math.abs(this.player.velocityX) * 0.3; // Bounce back weakly
+        // Secret evil nudge mechanic - randomly scoot left every 20 seconds
+        this.nudgeTimer++;
+        if (this.nudgeTimer >= this.nudgeInterval) {
+            // Random nudge between 2-8 pixels to the left
+            const nudgeAmount = -(2 + Math.random() * 6);
+            this.player.x += nudgeAmount;
+            this.nudgeTimer = 0; // Reset timer
         }
-        if (this.player.x + this.player.width > this.canvas.width) {
-            this.player.x = this.canvas.width - this.player.width;
-            this.player.velocityX = -Math.abs(this.player.velocityX) * 0.3; // Bounce back weakly
+        
+        // Keep player on screen horizontally - death if they go off screen
+        if (this.player.x < -this.player.width || this.player.x > this.canvas.width) {
+            this.playerDied();
+            return; // Exit early to prevent further processing
         }
         
         // Check platform collisions
@@ -598,21 +608,21 @@ class RageJump {
             document.body.classList.remove('screen-shake');
         }, 500);
         
-        // Death flash
         this.canvas.classList.add('death-flash');
         setTimeout(() => {
             this.canvas.classList.remove('death-flash');
         }, 300);
         
-        // Play death sound and show mocking message
         this.playSound('deathSound');
         
-        // 15% chance to show troll image, otherwise show insult message
+        if (Math.random() < 0.12) {
+            this.playRandomLaughSound();
+        }
+        
         if (Math.random() < 0.15) {
             this.showTrollImage();
-            this.unlockAchievement('getTrolled'); // Unlock achievement when trolled
+            this.unlockAchievement('getTrolled'); 
         } else {
-            // Choose extra evil message if they were doing well
             if (wasCloseToRecord && this.height > 50) {
                 this.showMockingMessage(`Ouch! Fell from ${this.height}m when your best is ${this.bestHeight}m. So close!`);
             } else {
@@ -972,6 +982,28 @@ class RageJump {
                     // Ignore audio play errors (browser restrictions)
                 });
             }
+        } catch (e) {
+            // Ignore audio errors
+        }
+    }
+    
+    playRandomLaughSound() {
+        // List of laugh sound files in assets/laugh/
+        const laughSounds = [
+            'laugh1.wav', 'laugh2.wav', 'laugh3.wav', 'laugh4.wav', 'laugh5.wav',
+            'laugh6.wav', 'laugh7.wav', 'laugh8.wav', 'laugh9.wav', 'laugh10.wav'
+        ];
+        
+        // Pick a random laugh sound
+        const randomLaugh = laughSounds[Math.floor(Math.random() * laughSounds.length)];
+        
+        try {
+            // Create audio element dynamically
+            const audio = new Audio(`assets/laugh/${randomLaugh}`);
+            audio.volume = 0.7; // Slightly quieter than death sound
+            audio.play().catch(() => {
+                // Ignore audio play errors (browser restrictions)
+            });
         } catch (e) {
             // Ignore audio errors
         }
