@@ -40,6 +40,11 @@ class RageJump {
         this.sessionStartTime = Date.now();
         this.totalPlayTime = this.loadTotalPlayTime();
         
+        // Frame rate limiting for consistent timing
+        this.targetFPS = 60;
+        this.frameInterval = 1000 / this.targetFPS;
+        this.lastFrameTime = 0;
+        
         // Rage mechanics
         this.mockingMessages = [
             "Seriously? Already?",
@@ -47,6 +52,7 @@ class RageJump {
             "You slow?",
             "Keep practicing, champ 🥇",
             "This aint it",
+            "You genuinely suck.",
             "Baby’s first videogame? 🍼",
             "Cute attempt",
             "Blink if you're slow!",
@@ -969,10 +975,17 @@ class RageJump {
         }
     }
     
-    gameLoop() {
-        this.update();
-        this.render();
-        requestAnimationFrame(() => this.gameLoop());
+    gameLoop(currentTime = 0) {
+        // Frame rate limiting to ensure consistent 60 FPS
+        const deltaTime = currentTime - this.lastFrameTime;
+        
+        if (deltaTime >= this.frameInterval) {
+            this.update();
+            this.render();
+            this.lastFrameTime = currentTime - (deltaTime % this.frameInterval);
+        }
+        
+        requestAnimationFrame((time) => this.gameLoop(time));
     }
     
     // Save/Load System (for maximum psychological damage)
